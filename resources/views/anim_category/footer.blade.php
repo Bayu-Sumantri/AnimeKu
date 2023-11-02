@@ -13,7 +13,7 @@
             <div class="col-lg-6">
                 <div class="footer__nav">
                     <ul>
-                        <li class="active"><a href="{{ url("./index.html") }}">Homepage</a></li>
+                        <li class="active"><a href="{{ route("home") }}">Homepage</a></li>
                         <li><a href="{{ url("./categories.html") }}">Categories</a></li>
                         <li><a href="{{ url("./blog.html") }}">Our Blog</a></li>
                         <li><a href="{{ url("#") }}">Contacts</a></li>

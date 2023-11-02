@@ -37,6 +37,8 @@
                             @endif
                             <a href="{{ route('AnimeKu.index') }}" class="dropdown-item">AnimeKu</a>
                             <a href="{{ route('list_anime') }}" class="dropdown-item">List AnimeKu</a>
+                            <a href="{{ route('list_blog_anime') }}" class="dropdown-item">List Blog Anim (Admin)</a>
+                            <a href="{{ route('wishlist_alluser') }}" class="dropdown-item">wishlist (user)</a>
                         </div>
                     </div>
 
@@ -46,6 +48,7 @@
                         <div class="dropdown-menu bg-transparent border-0">
                             @if (auth()->user()->level == 'Admin')
                                 <a href="{{ route('cetak.index') }}" class="dropdown-item">Cetak User's</a>
+                                <a href="{{ route('cetak_animeku') }}" class="dropdown-item">Cetak animeku</a>
                             @endif
                         </div>
                     </div>

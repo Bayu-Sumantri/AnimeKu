@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('episodes', function (Blueprint $table) {
+        Schema::create('blog_animes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('anime_id')->references('id')->on('anime_ku');
-            $table->string('episode_number');
-            $table->text('manga_animeku', 20500);
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->string('nama_anime');
+            $table->text('deskripsi_anime_coming_soon', 1000);
+            $table->string('gambar_anime_coming_soon');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('episodes');
+        Schema::dropIfExists('blog_animes');
     }
 };

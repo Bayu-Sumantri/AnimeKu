@@ -13,8 +13,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__links">
-                    <a href="{{ url('./index.html') }}"><i class="fa fa-home"></i> Home</a>
-                    <a href="{{ url('./categories.html') }}">Categories</a>
+                    <a href="{{ route('home') }}"><i class="fa fa-home"></i> Home</a>
                     <span>{{ old('Genre', $animeku->Genre) }}</span>
                 </div>
             </div>
@@ -32,13 +31,13 @@
                     <div class="anime__details__pic set-bg">
 
                         @if ($animeku->Gambar_anime)
-                            <img class="user anime__details__pic set-bg"
+                            <img class="anime__details__pic set-bg"
                                 src="{{ \Illuminate\Support\Facades\Storage::url($animeku->Gambar_anime) }}"
                                 alt="">
                         @else
                             <p>Images Tidak ada</p>
                         @endif
-                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
+                        <div class="comment"><i class="fa fa-comments"></i> {{ $animeku->comments->count() }}</div>
                         <div class="view"><i class="fa fa-eye"></i> 9141</div>
                     </div>
                 </div>
@@ -47,16 +46,6 @@
                         <div class="anime__details__title">
                             <h3>{{ old('judul', $animeku->judul) }}</h3>
                             <span>{{ old('author', $animeku->author) }}</span>
-                        </div>
-                        <div class="anime__details__rating">
-                            <div class="rating">
-                                <a href="{{ url('#') }}"><i class="fa fa-star"></i></a>
-                                <a href="{{ url('#') }}"><i class="fa fa-star"></i></a>
-                                <a href="{{ url('#') }}"><i class="fa fa-star"></i></a>
-                                <a href="{{ url('#') }}"><i class="fa fa-star"></i></a>
-                                <a href="{{ url('#') }}"><i class="fa fa-star-half-o"></i></a>
-                            </div>
-                            <span>1.029 Votes</span>
                         </div>
                         <p class="text"
                             data-config='{ "type": "text", "element": "p", "limit": 100, "more": "show more ↓", "less": "show less ↑"}'>
@@ -94,7 +83,7 @@
                             <form action="{{ route('wishlist.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="anime_id" value="{{ $animeku->id }}">
-                                <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                                <input type="hidden" name="user_id" value="{{auth()->check() &&  auth()->user()->id }}">
                                 <button type="submit" class="follow-btn fa fa-heart-o">
                                     Follow</button>
                             </form>
@@ -111,69 +100,38 @@
                     <div class="section-title">
                         <h5>Reviews</h5>
                     </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="{{ asset('anime/img/anime/review-1.jpg') }}" alt="">
+                        @if (session()->has('success_comment'))
+                            <div class="alert alert-success">
+                                {{ session('success_comment') }}
+                            </div>
+                        @endif
+                    @foreach ($animeku->comments as $comment)
+                        <div class="anime__review__item">
+                            <div class="anime__review__item__pic">
+                                {{-- <img src="{{ \Illuminate\Support\Facades\Storage::url($comment->user->Profile) }}" alt="Gambar Account"> --}}
+                                @if ($comment->user->profile)
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($comment->user->profile) }}"
+                                        alt="Gambar Account">
+                                @else
+                                    <img src="{{ asset('/anime/img/profile/profile.png') }}" alt="Gambar Account Tidak Ada">
+                                @endif
+                            </div>
+                            <div class="anime__review__item__text blog__details__comment__item__text">
+                                <h6>{{ $comment->user->name }}  <span>{{ $comment->created_at->diffForHumans() }}</span></h6>
+                                <p>{{ $comment->content }}</p>
+                                 <button class="btn btn-secondary btn-sm mt-2 rounded" id="replay_muncul{{ $comment->id }}"
+                                onclick="replay_muncul({{ $comment->id }})">Reply</button>
+                            </div>
                         </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="{{ asset('/anime/img/anime/review-2.jpg') }}" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="{{ asset('/anime/img/anime/review-3.jpg') }}" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="{{ asset('/anime/img/anime/review-4.jpg') }}" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="{{ asset('/anime/img/anime/review-5.jpg') }}" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="{{ asset('/anime/img/anime/review-6.jpg') }}" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
                 <div class="anime__details__form">
                     <div class="section-title">
                         <h5>Your Comment</h5>
                     </div>
-                    <form action="#">
-                        <textarea placeholder="Your Comment"></textarea>
+                    <form action="{{ route('commants_create', [$animeku->id]) }}" method="POST">
+                        @csrf
+                        <textarea placeholder="Your Comment" name="commant"></textarea>
                         <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
                     </form>
                 </div>
@@ -212,5 +170,16 @@
         </div>
     </div>
 </section>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.3.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#replay_muncul").click(function() {
+                $("#replay_muncul").show("slow");
+                $("#replay_muncul").hide("slow");
+            });
+        });
+    </script>
 <!-- Anime Section End -->
 @endsection

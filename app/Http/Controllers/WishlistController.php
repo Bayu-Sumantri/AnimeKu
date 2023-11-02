@@ -16,10 +16,12 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        $wishlist = Wishlist::with('animeku')->get();
+        // $wishlist_all = Wishlist::findOrFail($id);
+        $wishlist = Wishlist::with('animeku')->paginate(10); // Menampilkan 10 item per halaman
+        $allwishlist = Wishlist::all();
         // return $wishlist;
         // $wishlist = Wishlist::with('anime')->get();
-        return view('anim_category.category.anim_detail', compact('wishlist'));
+        return view('admin_master.user_admin.wishlist_user', compact('wishlist', 'allwishlist'));
     }
 
     /**
@@ -39,7 +41,7 @@ class WishlistController extends Controller
             "user_id"     => $request->user_id,
             "anime_id"     => $request->anime_id,
         ]);
-        return back()->with('success', "successfully uploaded your anime");
+        return back()->with('success', "successfully Wishlist Your Anime");
 
     }
 
@@ -75,6 +77,20 @@ class WishlistController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        {
+            // Validasi $id
+            if (!is_numeric($id)) {
+                return redirect()->back()->with('error', 'Invalid Wishlist ID');
+            }
+        
+            // Temukan dan hapus Wishlist
+            $wishlist = Wishlist::find($id);
+            if ($wishlist) {
+                $wishlist->delete();
+                return redirect()->route('wishlist.index')->with('success', 'Wishlist successfully deleted');
+            } else {
+                return redirect()->back()->with('error', 'Wishlist not found');
+            }
+        }
     }
 }

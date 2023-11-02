@@ -55,7 +55,7 @@
                                     action="{{ route('delate.destroy', [$row->id]) }}">
                                     @csrf
                                     {{ method_field('DELETE') }}
-                                    <a href="{{ route('user.edit', $row->id) }}" class="btn btn-info"><i
+                                    <a href="{{ route('Users.edit', $row->id) }}" class="btn btn-info"><i
                                             class="far fa-edit"></i></a>
                             </td>
                             <td>

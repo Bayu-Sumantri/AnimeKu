@@ -95,6 +95,11 @@
 <div class="container-fluid pt-4 px-4">
 
     <div class="bg-secondary rounded h-100 p-4">
+        <!-- Button trigger modal -->
+    <a target="_blank" href="{{ route('cetakPDFanime') }}" class="btn btn-primary float-left"><i class="fas fa-print"></i>
+        Print PDF</a>
+    <a target="_blank" href="{{ route('cetak_word') }}" class="btn btn-info float-left"><i class="fas fa-print"></i>
+        Print WORD</a>
 
         <style type="text/css">
             .img-wrap {
@@ -128,7 +133,7 @@
 
 
 
-{{ $animeku->appends(Request::all())->links() }}
+{{-- {{ $animeku->appends(Request::all())->links() }} --}}
 
 
 <script src="https://cdn.jsdelivr.net/gh/tomik23/show-more@master/docs/showMore.min.js"></script>

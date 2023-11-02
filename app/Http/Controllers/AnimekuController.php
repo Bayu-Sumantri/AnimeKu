@@ -38,6 +38,7 @@ class AnimekuController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $data = $request->validate([
             'judul' =>  ['required','string','max:255'],
             'Deskripsi_anime' =>  ['required','string','max:1000'],
@@ -110,7 +111,7 @@ class AnimekuController extends Controller
         
         $anime->Episode()->create([
             'episode_number'           =>$request->episode_number,	
-            'vidio_url'                =>$request->vidio_url,	
+            'manga_animeku'            =>$request->manga_animeku,	
         ]);
         return redirect( route('list_anime'))->with('success', 'Item updated successfully');
 

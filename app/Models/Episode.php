@@ -17,7 +17,7 @@ class Episode extends Model
     protected $fillable = [
         "episode_number",
         "anime_id",
-        "vidio_url",
+        "manga_animeku",
     ];
 
 

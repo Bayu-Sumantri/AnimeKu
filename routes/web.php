@@ -2,14 +2,23 @@
 
 use App\Models\User;
 use App\Models\AnimeKu;
+use App\Models\Commant;
 use App\Models\Episode;
+use App\Models\Wishlist;
+use App\Models\BlogAnime;
+use Google\Service\Sheets;
+use FontLib\Table\Type\name;
+use Illuminate\Support\Facades\Auth;
+use Google\Service\TagManager\Client;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CetakController;
 use App\Http\Controllers\AnimeKuController;
+use App\Http\Controllers\CommantController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\BlogAnimeController;
 use App\Http\Controllers\List_AnimeKu_Controller;
 use App\Http\Controllers\Episode_anime_Controller;
 
@@ -29,13 +38,16 @@ Route::get('/', function () {
 
     // return $animeku;
     return view('welcome', compact('animeku'));
-});
+})->name('home');
 
 Route::get('/category', function () {
-    return view('anim_category/category/category');
+    $animeku_list = AnimeKu::all();
+    
+    return view('anim_category/category/category', compact('animeku_list'));
 });
 
 Route::get('/anim_detail', function () {
+    
     return view('anim_category/category/anim_detail');
 });
 
@@ -44,8 +56,12 @@ Route::get('/anim_watch', function () {
 });
 
 Route::get('/anim_blog', function () {
-    return view('anim_category/category/anim_blog');
-})->name('anim');
+    $bloganimeku = BlogAnime::all();
+    $blogcommant = AnimeKu::all();
+
+    
+    return view('anim_category/category/anim_blog', compact('bloganimeku', 'blogcommant'));
+})->name('anim_blog');
 
 
 
@@ -66,9 +82,10 @@ Route::get('/AnimeKu_list', function () {
 
 Route::get('/AnimeKu_detail/{id}', function (string $id) {
     $animeku=AnimeKu::findOrFail($id);
+    $allanime=AnimeKu::count();
 
     
-    return view('anim_category.category.anim_detail', compact('animeku'));
+    return view('anim_category.category.anim_detail', compact('animeku', 'allanime'));
 })->name('AnimeKu_detail');
 
 
@@ -85,7 +102,8 @@ Route::get('/profil_edit', function () {
 Route::get('/dashboard', function () {
      $total_user = User::count();
      $total_anime = AnimeKu::count();
-    return view('admin_master.index', compact('total_user','total_anime'));
+     $total_wishlist = Wishlist::where('user_id', Auth::id())->count();
+    return view('admin_master.index', compact('total_user','total_anime', 'total_wishlist'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -100,11 +118,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::delete('/delete/{id}', [UserController::class,"destroy"])->name('delate.destroy');
-Route::get('/edit_user/{id}', function (string $id) {
-    $user=User::findOrFail($id);
-    // return $user;
-    return view('admin_master.side_admin.user_edit', compact('user'));
-})->name('user.edit');
 
 Route::get('/episode_anime/{id}', function (string $id) {
     $animeku = AnimeKu::findOrFail($id);
@@ -135,12 +148,68 @@ Route::resource('Users','App\Http\Controllers\UserController');
 Route::resource('episode','App\Http\Controllers\Episode_anime_Controller');
 Route::resource('wishlist','App\Http\Controllers\WishlistController');
 Route::resource('cetak','App\Http\Controllers\CetakController');
+Route::resource('bloganime','App\Http\Controllers\BlogAnimeController');
+Route::resource('commants','App\Http\Controllers\CommantController');
 Route::resource('Poto','App\Http\Controllers\PictureController')->parameters(['Poto'  => 'user']);
 
 
 // cetak laporan
 Route::get('cetak_pdf', [CetakController::class,"cetakPDF"])->name('cetak_pdf');
 Route::get('cetak_word', [CetakController::class, "cetakWord"])->name('cetak_word');
+
+
+
+Route::get('cetakPDFanime', [CetakController::class, "cetakPDFanime"])->name('cetakPDFanime');
+
+
+Route::get('/cetak_animeku', function () {
+    $animeku = AnimeKu::orderBy('judul', 'asc')->get();
+    
+    return view('report_animeku.index', compact('animeku'));
+})->name('cetak_animeku');
+
+
+// wishlist user 
+Route::get('/wishlist_user/{id}', function (string $id) {
+
+    
+    $allwishlist = Wishlist::all();
+    // return $episode;
+    return view('admin_master.user_admin.wishlist_user', compact('wishlist','allwishlist'));
+})->name('wishlist_user');
+
+Route::get('/wishlist_alluser', function () {
+
+    
+    $wishlist = Wishlist::whereHas('user', function ($query) {
+        return $query->where('id', auth()->id());
+    })->paginate(10);
+   // return $episode;
+   
+   return view('admin_master.user_admin.wishlist_user', compact('wishlist'));
+})->name('wishlist_alluser');
+Route::delete('/delete/{id}', [WishlistController::class,"destroy"])->name('delate.destroy');
+
+
+// create blog anime coming soon
+Route::get('/list_blog_anime', function () {
+    $listblog = BlogAnime::all();
+    
+    return view('admin_master.side_admin.blog_anime_create', compact('listblog'));
+})->name('list_blog_anime');
+Route::get('/anime_coming_soon', [BlogAnimeController::class,"create"])->name('anime_coming_soon'); // halaman create anime saja
+
+
+
+// commants create
+Route::post('/commants_create/{id}', [CommantController::class,"store"])->name('commants_create'); // halaman create anime saja
+
+
+
+
+
+
+
 
 
 require __DIR__.'/auth.php';

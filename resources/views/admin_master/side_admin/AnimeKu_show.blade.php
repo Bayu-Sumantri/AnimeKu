@@ -32,7 +32,7 @@ Dashboard
 
 	.card {
 		background: #191C24;
-		padding: 24px;
+		padding: 24px;	
 		border-radius: 13px;
 		position: relative;
 		max-width: 280px;

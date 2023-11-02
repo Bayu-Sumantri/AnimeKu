@@ -13,11 +13,12 @@ Dashboard
 		{{ session('success') }}
 	</div>
 	@endif
+	@if (session()->has('error'))
+	<div class="alert alert-warning">
+		{{ session('error') }}
+	</div>
+	@endif
 
-	<!-- Button trigger modal -->
-	<a href="{{ url('create_user') }}"  class="btn btn-primary"><i class="fa fa-plus"></i>
-		User
-	</a>
 
 
 
@@ -31,39 +32,35 @@ Dashboard
 				<thead>
 					<tr>
 						<th scope="col">No</th>
-						<th scope="col">Username</th>
-						<th scope="col">Gmail</th>
+						<th scope="col">judul</th>
 						<th scope="col">Status</th>
-						<th scope="col">Email Verified</th>
+						<th scope="col">Pembuat Anime</th>
+						<th scope="col">nama anda</th>
 						<th scope="col">Created At</th>
 						<th scope="col">Update At</th>
-						<th scope="col">Edit</th>
 						<th scope="col">Hapus</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						@foreach ($user as $row)
-						<th scope="row">{{ $loop->iteration + $user->perpage() * ($user->currentPage() - 1) }}</th>
-						<td>{{ $row->name }}</td>
-						<td>{{ $row->email }}</td>
-						<td>{{ $row->level }}</td>
-						@if ($row->email_verified_at)
-						<td>{{ $row->email_verified_at }}</td>
+						@foreach ($wishlist as $row)
+						<th scope="row">{{ $loop->iteration + $wishlist->perpage() * ($wishlist->currentPage() - 1) }}</th>
+						<td>{{ $row->animeku->judul }}</td>
+						<td>{{ $row->animeKu->Status }}</td>
+						@if ($row->animeku->author)
+						<td>{{ $row->animeku->author }}</td>
 						@else
 						<td>Tidak Ada</td>
 						@endif
+						<td>{{ $row->user->name }}</td>
 						<td>{{ $row->created_at->diffForHumans() }}</td>
 						<td>{{ $row->updated_at->diffForHumans() }}</td>
-						<td><form method="post" onsubmit="return confirm('Apakah anda yakin akan menghapus, {{ $row->name }}?..')" action="{{ route('delate.destroy', [$row->id]) }}">
+							<td><form method="post" onsubmit="return confirm('Apakah anda yakin akan menghapus, {{ $row->animeku->judul }} ?..')" action="{{ route('delate.destroy', [$row->id]) }}">
 							@csrf
 							{{ method_field('DELETE') }}
-							<a href=""
-								class="btn btn-info"><i class="far fa-edit"></i></a>
-							</td>
-							<td>
 								<button type="submit" class="btn btn-danger"><i
 									class="fa fa-trash"></i></button>
+									</form>
 
 								</td>
 							</form></td>
@@ -71,7 +68,7 @@ Dashboard
 						@endforeach
 
 					</table>
-					{{ $user->appends(Request::all())->links() }}
+					{{-- {{ $wishlist->appends(Request::all())->links() }} --}}
 				</div>
 
 				<!-- </form> -->

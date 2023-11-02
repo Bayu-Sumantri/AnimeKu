@@ -13,16 +13,21 @@ class Wishlist extends Model
     use HasFactory;
 
         protected $table="wishlist";
+        
+        protected $fillable = [
+            "user_id",
+            "anime_id",
+        ];
+        
         public function animeku(): BelongsTo
         {
             return $this->belongsTo(AnimeKu::class, 'anime_id');
         }
         
-    protected $fillable = [
-        "user_id",
-        "anime_id",
-    ];
-
+        public function user(): BelongsTo
+        {
+            return $this->belongsTo(User::class, 'user_id');
+        }
 
 
 }

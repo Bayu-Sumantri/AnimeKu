@@ -21,12 +21,21 @@ class AddUserSeeder extends Seeder
         //     "password"       => \bcrypt('bayu12345')
         // ]);
          User::create([
-            "name"           => "BlackCat", 
+            "name"           => "BlackCat",
+             
             "email"          => "BlackCat@gmail.com", 
             "Profile"          => "",
             "level"          => "Admin", 
             "password"       => \bcrypt('admin123')
          ]);
+        //  User::create([
+        //     "name"           => "add",
+             
+        //     "email"          => "add@gmail.com", 
+        //     "Profile"          => "",
+        //     "level"          => "User", 
+        //     "password"       => \bcrypt('admin123')
+        //  ]);
          // User::create([
          //    "name"           => "admin", 
          //    "email"          => "admin@gmail.com", 

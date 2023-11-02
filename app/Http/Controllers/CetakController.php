@@ -6,7 +6,9 @@ use App\Models\User;
 use PhpOffice\PhpWord\PhpWord;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AnimeKu;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 use PhpOffice\PhpWord\Writer\PDF as WriterPDF;
 
 class CetakController extends Controller
@@ -22,6 +24,19 @@ class CetakController extends Controller
     {
         $R_user = User::orderby('created_at','DESC')->get();
         $pdf = Pdf::loadview('report_user.lapuser', compact('R_user'));
+        // return $R_user;
+        return $pdf->stream();
+    }
+    
+    public function cetakPDFanime()
+    {
+        $R_animeku = AnimeKu::orderby('created_at','DESC')->get();
+        
+        $pdf = Pdf::loadview('report_animeku.report_animeku', compact('R_animeku'));
+
+            // //Set timeout
+            // $pdf->setTimeout(300);
+    
         // return $R_user;
         return $pdf->stream();
     }

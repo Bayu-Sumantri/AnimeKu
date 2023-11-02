@@ -1,4 +1,4 @@
-# Service Tools
+# Anime_Ku
 
 Website ini adalah sebuah web yang dimana dia website seperti baca manga anime online untuk penggemar anime 
 yang dimana dia dalam weeb tersebut sudah tersedia 2 role admin dan user
